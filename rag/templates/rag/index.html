@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DRF RAG API</title>
+  <meta name="description" content="Upload PDF, DOCX or text files and ask questions; answers cite the source page. Django REST Framework, ChromaDB, WordLlama embeddings.">
+  <style>
+    :root { --bg:#f6f7fb; --card:#fff; --text:#1d2433; --muted:#5c6579; --line:#e1e5ee; --accent:#0f766e; --soft:#e6f4f2; --mark:#fde68a; color-scheme: light dark; }
+    @media (prefers-color-scheme: dark) { :root { --bg:#0f1319; --card:#161c25; --text:#e5e9f0; --muted:#98a2b3; --line:#283141; --accent:#2dd4bf; --soft:#123230; --mark:#665a12; } }
+    * { box-sizing: border-box; }
+    body { margin:0; font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--text); }
+    main { max-width: 860px; margin: 0 auto; padding: 24px 16px 48px; }
+    h1 { margin: 0; font-size: 1.5rem; } h2 { font-size: 1.05rem; margin: 0 0 10px; }
+    .sub { color: var(--muted); margin: 4px 0 20px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; }
+    input[type=text] { flex: 1 1 300px; min-width: 0; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font: inherit; }
+    button { border: 0; border-radius: 8px; padding: 10px 16px; background: var(--accent); color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+    button.secondary { background: var(--soft); color: var(--accent); }
+    button:disabled { opacity: .5; cursor: default; }
+    .muted { color: var(--muted); font-size: .9rem; }
+    ul.docs { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+    ul.docs li { display: flex; justify-content: space-between; gap: 8px; font-size: .93rem; border-bottom: 1px dashed var(--line); padding-bottom: 6px; }
+    .answer { font-size: 1.02rem; white-space: pre-wrap; }
+    .src { border-left: 3px solid var(--accent); padding: 6px 10px; margin: 10px 0; background: var(--bg); border-radius: 0 8px 8px 0; }
+    .src .meta { font-size: .82rem; color: var(--muted); display: flex; justify-content: space-between; }
+    .src p { margin: 4px 0 0; font-size: .9rem; max-height: 9.5em; overflow: auto; }
+    .error { color: #c0392b; }
+    footer { color: var(--muted); font-size: .85rem; margin-top: 24px; }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+<main>
+  <h1>DRF RAG API</h1>
+  <p class="sub">Upload a PDF, DOCX or text file, then ask a question. Answers quote the passages they come from, with the page.
+    Built with Django REST Framework, ChromaDB and WordLlama embeddings (no API key needed).</p>
+
+  <section class="card">
+    <h2>Ask the documents</h2>
+    <form id="ask" class="row">
+      <input id="q" type="text" maxlength="500" placeholder="e.g. How quickly must a data breach be reported?" aria-label="Question">
+      <button id="askBtn" type="submit">Ask</button>
+      <button id="searchBtn" type="button" class="secondary">Search only</button>
+    </form>
+    <p class="muted" id="mode"></p>
+    <div id="result"></div>
+  </section>
+
+  <section class="card">
+    <h2>Documents</h2>
+    <ul class="docs" id="docs"><li class="muted">Loading…</li></ul>
+    <form id="upload" class="row" style="margin-top:12px">
+      <input id="file" type="file" accept=".pdf,.docx,.txt,.md" aria-label="File to upload">
+      <button type="submit">Upload</button>
+    </form>
+    <p class="muted">PDF, DOCX, TXT or MD up to 4 MB. This demo keeps uploads in memory: they disappear when the server restarts.</p>
+  </section>
+
+  <footer>
+    API: <code>POST /api/documents/</code>, <code>POST /api/search/</code>, <code>POST /api/ask/</code>, <code>GET /api/health/</code>.
+    Sample documents: GDPR text from the Structured GDPR JSON dataset (CC BY 4.0). Not legal advice.
+    <a href="https://github.com/Shreyashsalv2/drf-rag-api">Source on GitHub</a>
+  </footer>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
+
+async function api(path, options = {}) {
+  const res = await fetch(path, options);
+  const body = res.status === 204 ? null : await res.json().catch(() => null);
+  if (!res.ok) throw new Error(body?.error?.message ? `${body.error.message} ${body.error.details ? JSON.stringify(body.error.details) : ""}` : `Request failed (${res.status})`);
+  return body;
+}
+
+async function loadDocs() {
+  const list = $("docs");
+  try {
+    const data = await api("/api/documents/");
+    list.replaceChildren(...data.results.map((d) => {
+      const li = el("li");
+      li.append(el("span", "", d.title), el("span", "muted", `${d.file_type.toUpperCase()} · ${d.pages} page${d.pages === 1 ? "" : "s"} · ${d.chunk_count} chunks`));
+      return li;
+    }));
+  } catch (e) { list.replaceChildren(el("li", "error", e.message)); }
+}
+
+function showSources(sources) {
+  return sources.map((s) => {
+    const box = el("div", "src");
+    const meta = el("div", "meta");
+    meta.append(el("span", "", `${s.n ? `[${s.n}] ` : ""}${s.document}, page ${s.page}`), el("span", "", `score ${s.score.toFixed(3)}`));
+    box.append(meta, el("p", "", s.text));
+    return box;
+  });
+}
+
+async function run(kind) {
+  const query = $("q").value.trim();
+  if (query.length < 2) return;
+  const out = $("result");
+  out.replaceChildren(el("p", "muted", kind === "ask" ? "Thinking…" : "Searching…"));
+  $("askBtn").disabled = $("searchBtn").disabled = true;
+  try {
+    const data = await api(`/api/${kind}/`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query, k: 5 }) });
+    if (kind === "ask") {
+      $("mode").textContent = data.mode === "extractive" ? "Extractive answer (no LLM key configured): the closest sentences, with their source numbers." : `Answer written by ${data.mode.replace("llm:", "")} from the sources below.`;
+      out.replaceChildren(el("p", "answer", data.answer), ...(data.note ? [el("p", "muted", data.note)] : []), ...showSources(data.sources));
+    } else {
+      $("mode").textContent = `${data.count} passages, ranked by cosine similarity.`;
+      out.replaceChildren(...showSources(data.results.map((s, i) => ({ ...s, n: i + 1 }))));
+    }
+  } catch (e) { out.replaceChildren(el("p", "error", e.message)); }
+  finally { $("askBtn").disabled = $("searchBtn").disabled = false; }
+}
+
+$("ask").addEventListener("submit", (e) => { e.preventDefault(); run("ask"); });
+$("searchBtn").addEventListener("click", () => run("search"));
+$("upload").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const file = $("file").files[0];
+  if (!file) return;
+  const form = new FormData(); form.append("file", file);
+  const out = $("result");
+  out.replaceChildren(el("p", "muted", `Uploading ${file.name}…`));
+  try {
+    const doc = await api("/api/documents/", { method: "POST", body: form });
+    out.replaceChildren(el("p", "", `Added "${doc.title}": ${doc.pages} page(s), ${doc.chunk_count} chunks. Ask a question about it.`));
+    $("file").value = ""; loadDocs();
+  } catch (err) { out.replaceChildren(el("p", "error", err.message)); }
+});
+loadDocs();
+</script>
+</body>
+</html>
