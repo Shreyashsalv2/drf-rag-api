@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: lint + tests on PostgreSQL 16 + retrieval eval
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: rag
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/rag
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - run: ruff check . && ruff format --check .
+      - run: python manage.py makemigrations --check --dry-run
+      - name: Tests on PostgreSQL
+        run: pytest
+      - name: Tests on SQLite (the demo database)
+        run: pytest
+        env:
+          DATABASE_URL: ""
+      - name: Retrieval evaluation (fails if recall@5 drops below 0.88)
+        run: python manage.py evaluate_rag --min-recall 0.88 --out /tmp/eval.json
+
+  docker:
+    name: Docker Compose smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: docker compose up -d --build --wait
+      - name: Health, upload, search and ask on the running container
+        run: |
+          curl -fsS http://localhost:8000/api/health/ | tee /dev/stderr | grep -q '"documents":5'
+          printf 'Remote work policy. Employees may work from home two days a week with manager approval.' > policy.txt
+          curl -fsS -F "file=@policy.txt" http://localhost:8000/api/documents/ | grep -q '"chunk_count"'
+          curl -fsS -H 'Content-Type: application/json' -d '{"query":"How many days can I work from home?"}' \
+            http://localhost:8000/api/search/ | grep -q 'two days a week'
+          curl -fsS -H 'Content-Type: application/json' -d '{"query":"When must a data breach be notified?"}' \
+            http://localhost:8000/api/ask/ | grep -q '"mode":"extractive"'
+      - name: Container logs
+        if: failure()
+        run: docker compose logs
+      - if: always()
+        run: docker compose down -v

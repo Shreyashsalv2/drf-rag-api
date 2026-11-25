@@ -1,0 +1,581 @@
+{
+  "documents": [
+    "gdpr-ch01-02-principles.pdf",
+    "gdpr-ch03-data-subject-rights.pdf",
+    "gdpr-ch04-controller-processor.docx",
+    "gdpr-ch05-international-transfers.pdf",
+    "gdpr-ch08-remedies-penalties.md"
+  ],
+  "runs": [
+    {
+      "chunk_size": 400,
+      "overlap": 60,
+      "chunks": 410,
+      "k": 5,
+      "questions": 25,
+      "recall_at_k": 0.88,
+      "hits": 22,
+      "mrr": 0.698,
+      "per_question": [
+        {
+          "question": "erase personal data",
+          "expected": [
+            17
+          ],
+          "rank": null
+        },
+        {
+          "question": "data breach notification",
+          "expected": [
+            33,
+            34
+          ],
+          "rank": 1
+        },
+        {
+          "question": "children consent online services",
+          "expected": [
+            8
+          ],
+          "rank": 1
+        },
+        {
+          "question": "fines for infringements",
+          "expected": [
+            83
+          ],
+          "rank": 1
+        },
+        {
+          "question": "data protection officer tasks",
+          "expected": [
+            39
+          ],
+          "rank": 1
+        },
+        {
+          "question": "transfer data to third countries",
+          "expected": [
+            44,
+            45,
+            46
+          ],
+          "rank": 1
+        },
+        {
+          "question": "right to access my data",
+          "expected": [
+            15
+          ],
+          "rank": null
+        },
+        {
+          "question": "automated decision profiling",
+          "expected": [
+            22
+          ],
+          "rank": 2
+        },
+        {
+          "question": "privacy by design",
+          "expected": [
+            25
+          ],
+          "rank": 4
+        },
+        {
+          "question": "delete my data",
+          "expected": [
+            17
+          ],
+          "rank": 5
+        },
+        {
+          "question": "how long must data be kept",
+          "expected": [
+            5
+          ],
+          "rank": 1
+        },
+        {
+          "question": "can I object to direct marketing",
+          "expected": [
+            21
+          ],
+          "rank": 1
+        },
+        {
+          "question": "compensation for damage",
+          "expected": [
+            82
+          ],
+          "rank": 1
+        },
+        {
+          "question": "sensitive health data",
+          "expected": [
+            9
+          ],
+          "rank": null
+        },
+        {
+          "question": "notify individuals about a breach",
+          "expected": [
+            34
+          ],
+          "rank": 3
+        },
+        {
+          "question": "impact assessment high risk",
+          "expected": [
+            35
+          ],
+          "rank": 1
+        },
+        {
+          "question": "records of processing activities",
+          "expected": [
+            30
+          ],
+          "rank": 1
+        },
+        {
+          "question": "consent conditions",
+          "expected": [
+            7
+          ],
+          "rank": 1
+        },
+        {
+          "question": "portability of data",
+          "expected": [
+            20
+          ],
+          "rank": 1
+        },
+        {
+          "question": "right to lodge a complaint with a supervisory authority",
+          "expected": [
+            77
+          ],
+          "rank": 1
+        },
+        {
+          "question": "contract between controller and processor",
+          "expected": [
+            28
+          ],
+          "rank": 3
+        },
+        {
+          "question": "joint controllers",
+          "expected": [
+            26
+          ],
+          "rank": 1
+        },
+        {
+          "question": "security measures like encryption and pseudonymisation",
+          "expected": [
+            32
+          ],
+          "rank": 3
+        },
+        {
+          "question": "binding corporate rules",
+          "expected": [
+            47
+          ],
+          "rank": 1
+        },
+        {
+          "question": "correcting inaccurate personal data",
+          "expected": [
+            16
+          ],
+          "rank": 2
+        }
+      ]
+    },
+    {
+      "chunk_size": 800,
+      "overlap": 120,
+      "chunks": 201,
+      "k": 5,
+      "questions": 25,
+      "recall_at_k": 0.88,
+      "hits": 22,
+      "mrr": 0.661,
+      "per_question": [
+        {
+          "question": "erase personal data",
+          "expected": [
+            17
+          ],
+          "rank": 5
+        },
+        {
+          "question": "data breach notification",
+          "expected": [
+            33,
+            34
+          ],
+          "rank": 1
+        },
+        {
+          "question": "children consent online services",
+          "expected": [
+            8
+          ],
+          "rank": 1
+        },
+        {
+          "question": "fines for infringements",
+          "expected": [
+            83
+          ],
+          "rank": 1
+        },
+        {
+          "question": "data protection officer tasks",
+          "expected": [
+            39
+          ],
+          "rank": 1
+        },
+        {
+          "question": "transfer data to third countries",
+          "expected": [
+            44,
+            45,
+            46
+          ],
+          "rank": 2
+        },
+        {
+          "question": "right to access my data",
+          "expected": [
+            15
+          ],
+          "rank": 3
+        },
+        {
+          "question": "automated decision profiling",
+          "expected": [
+            22
+          ],
+          "rank": 1
+        },
+        {
+          "question": "privacy by design",
+          "expected": [
+            25
+          ],
+          "rank": null
+        },
+        {
+          "question": "delete my data",
+          "expected": [
+            17
+          ],
+          "rank": 2
+        },
+        {
+          "question": "how long must data be kept",
+          "expected": [
+            5
+          ],
+          "rank": 1
+        },
+        {
+          "question": "can I object to direct marketing",
+          "expected": [
+            21
+          ],
+          "rank": 1
+        },
+        {
+          "question": "compensation for damage",
+          "expected": [
+            82
+          ],
+          "rank": 1
+        },
+        {
+          "question": "sensitive health data",
+          "expected": [
+            9
+          ],
+          "rank": null
+        },
+        {
+          "question": "notify individuals about a breach",
+          "expected": [
+            34
+          ],
+          "rank": 2
+        },
+        {
+          "question": "impact assessment high risk",
+          "expected": [
+            35
+          ],
+          "rank": 1
+        },
+        {
+          "question": "records of processing activities",
+          "expected": [
+            30
+          ],
+          "rank": 3
+        },
+        {
+          "question": "consent conditions",
+          "expected": [
+            7
+          ],
+          "rank": 1
+        },
+        {
+          "question": "portability of data",
+          "expected": [
+            20
+          ],
+          "rank": 3
+        },
+        {
+          "question": "right to lodge a complaint with a supervisory authority",
+          "expected": [
+            77
+          ],
+          "rank": 1
+        },
+        {
+          "question": "contract between controller and processor",
+          "expected": [
+            28
+          ],
+          "rank": 2
+        },
+        {
+          "question": "joint controllers",
+          "expected": [
+            26
+          ],
+          "rank": 1
+        },
+        {
+          "question": "security measures like encryption and pseudonymisation",
+          "expected": [
+            32
+          ],
+          "rank": 3
+        },
+        {
+          "question": "binding corporate rules",
+          "expected": [
+            47
+          ],
+          "rank": 1
+        },
+        {
+          "question": "correcting inaccurate personal data",
+          "expected": [
+            16
+          ],
+          "rank": null
+        }
+      ]
+    },
+    {
+      "chunk_size": 1200,
+      "overlap": 180,
+      "chunks": 136,
+      "k": 5,
+      "questions": 25,
+      "recall_at_k": 0.92,
+      "hits": 23,
+      "mrr": 0.737,
+      "per_question": [
+        {
+          "question": "erase personal data",
+          "expected": [
+            17
+          ],
+          "rank": 2
+        },
+        {
+          "question": "data breach notification",
+          "expected": [
+            33,
+            34
+          ],
+          "rank": 1
+        },
+        {
+          "question": "children consent online services",
+          "expected": [
+            8
+          ],
+          "rank": 1
+        },
+        {
+          "question": "fines for infringements",
+          "expected": [
+            83
+          ],
+          "rank": 1
+        },
+        {
+          "question": "data protection officer tasks",
+          "expected": [
+            39
+          ],
+          "rank": 1
+        },
+        {
+          "question": "transfer data to third countries",
+          "expected": [
+            44,
+            45,
+            46
+          ],
+          "rank": 1
+        },
+        {
+          "question": "right to access my data",
+          "expected": [
+            15
+          ],
+          "rank": 3
+        },
+        {
+          "question": "automated decision profiling",
+          "expected": [
+            22
+          ],
+          "rank": 1
+        },
+        {
+          "question": "privacy by design",
+          "expected": [
+            25
+          ],
+          "rank": 4
+        },
+        {
+          "question": "delete my data",
+          "expected": [
+            17
+          ],
+          "rank": 3
+        },
+        {
+          "question": "how long must data be kept",
+          "expected": [
+            5
+          ],
+          "rank": 1
+        },
+        {
+          "question": "can I object to direct marketing",
+          "expected": [
+            21
+          ],
+          "rank": 1
+        },
+        {
+          "question": "compensation for damage",
+          "expected": [
+            82
+          ],
+          "rank": 1
+        },
+        {
+          "question": "sensitive health data",
+          "expected": [
+            9
+          ],
+          "rank": null
+        },
+        {
+          "question": "notify individuals about a breach",
+          "expected": [
+            34
+          ],
+          "rank": 3
+        },
+        {
+          "question": "impact assessment high risk",
+          "expected": [
+            35
+          ],
+          "rank": 1
+        },
+        {
+          "question": "records of processing activities",
+          "expected": [
+            30
+          ],
+          "rank": 3
+        },
+        {
+          "question": "consent conditions",
+          "expected": [
+            7
+          ],
+          "rank": 1
+        },
+        {
+          "question": "portability of data",
+          "expected": [
+            20
+          ],
+          "rank": 3
+        },
+        {
+          "question": "right to lodge a complaint with a supervisory authority",
+          "expected": [
+            77
+          ],
+          "rank": 1
+        },
+        {
+          "question": "contract between controller and processor",
+          "expected": [
+            28
+          ],
+          "rank": 1
+        },
+        {
+          "question": "joint controllers",
+          "expected": [
+            26
+          ],
+          "rank": 1
+        },
+        {
+          "question": "security measures like encryption and pseudonymisation",
+          "expected": [
+            32
+          ],
+          "rank": 1
+        },
+        {
+          "question": "binding corporate rules",
+          "expected": [
+            47
+          ],
+          "rank": 1
+        },
+        {
+          "question": "correcting inaccurate personal data",
+          "expected": [
+            16
+          ],
+          "rank": null
+        }
+      ]
+    }
+  ]
+}
