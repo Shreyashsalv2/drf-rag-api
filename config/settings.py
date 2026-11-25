@@ -52,9 +52,10 @@ TEMPLATES = [
 ]
 
 # PostgreSQL when DATABASE_URL is set (Docker Compose, CI); SQLite otherwise (local dev, Vercel demo).
+# An empty DATABASE_URL counts as unset.
 DATABASES = {
-    "default": dj_database_url.config(
-        default=f"sqlite:///{DATA_DIR / 'db.sqlite3'}",
+    "default": dj_database_url.parse(
+        os.environ.get("DATABASE_URL") or f"sqlite:///{DATA_DIR / 'db.sqlite3'}",
         conn_max_age=60,
     )
 }
