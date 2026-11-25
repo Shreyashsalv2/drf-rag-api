@@ -1,0 +1,7 @@
+-r requirements.txt
+pytest==9.2.0
+pytest-django==4.14.0
+responses==0.26.3
+fpdf2==2.9.0
+ruff==0.17.6
+gunicorn==27.0.1

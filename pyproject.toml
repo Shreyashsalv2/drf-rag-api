@@ -1,0 +1,14 @@
+[project]
+name = "drf-rag-api"
+version = "1.0.0"
+description = "Django REST Framework RAG API: upload PDF/DOCX/TXT, chunk, embed into ChromaDB, search and ask with cited sources."
+requires-python = ">=3.12"
+license = "MIT"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+extend-exclude = ["rag/migrations"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
